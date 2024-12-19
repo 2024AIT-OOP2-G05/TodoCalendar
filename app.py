@@ -30,9 +30,15 @@ def index():
     # データベースからスケジュールを読み込み
     with open(DB_FILE, 'r') as db:
         schedules = json.load(db)
-
-    # カレンダーの HTML テンプレートをレンダリングし、値を渡す
+        # カレンダーの HTML テンプレートをレンダリングし、値を渡す
     return render_template('calendar.html', year=year, month=month, month_days=month_days, schedules=schedules)
+
+@app.route('/detail/<int:year>/<int:month>/<int:day>')
+def detail(year, month, day):
+    # ここでdayに紐づく詳細情報を取得して表示する処理を書く
+    # とりあえず、デモとして日付を表示するだけ
+    return render_template('detail.html', year=year, month=month, day=day)
+
 
 # スケジュール追加ページ ('/add_schedule')：スケジュールを追加するフォームを表示し、データを保存
 @app.route('/add_schedule', methods=['GET', 'POST'])
@@ -78,12 +84,6 @@ def view_schedules():
     return render_template('view_schedules.html', schedules=schedules)
 
 # アプリケーションのエントリーポイント
-@app.route('/detail/<int:year>/<int:month>/<int:day>')
-def detail(year, month, day):
-    # ここでdayに紐づく詳細情報を取得して表示する処理を書く
-    # とりあえず、デモとして日付を表示するだけ
-    return render_template('detail.html', year=year, month=month, day=day)
-
 if __name__ == '__main__':
     # デバッグモードで Flask アプリケーションを実行
     app.run(debug=True)
