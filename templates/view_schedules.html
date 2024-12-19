@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スケジュール一覧</title>
+</head>
+<body>
+    <h1>スケジュール一覧</h1>
+    <ul>
+        {% for schedule in schedules %}
+            <li>
+                <a href="{{ url_for('edit_schedule', schedule_id=loop.index0) }}">
+                    {{ schedule['title'] }} ({{ schedule['start_date'] }} - {{ schedule['end_date'] }})
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('add_schedule') }}">新しいスケジュールを追加</a>
+</body>
+</html>
