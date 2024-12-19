@@ -1,1 +1,30 @@
+<<<<<<< HEAD
 [{"title": "\u30c6\u30b9\u30c8", "start_date": "2024-12-19", "end_date": "2024-12-19", "details": "\u30c6\u30b9\u30c8"}, {"title": "\u52c9\u5f37", "start_date": "2024-12-19", "end_date": "2024-12-19", "details": ""}, {"title": "\u6570\u5b66\u306e\u8ab2\u984c", "start_date": "2024-12-20", "end_date": "2024-12-22", "details": "\u6570\u5b66\u306e\u8ab2\u984c"}]
+=======
+[
+    {
+        "title": "課題やる",
+        "start_date": "2024-12-20",
+        "end_date": "2024-12-31",
+        "details": "課題がんばry"
+    },
+    {
+        "title": "勉強する",
+        "start_date": "2024-12-19",
+        "end_date": "2024-12-28",
+        "details": "頑張る"
+    },
+    {
+        "title": "あ",
+        "start_date": "2024-12-04",
+        "end_date": "2024-12-12",
+        "details": "あ"
+    },
+    {
+        "title": "スケジュール",
+        "start_date": "2024-12-11",
+        "end_date": "2025-01-23",
+        "details": "スケジュール"
+    }
+]
+>>>>>>> a576067801179efb5c54d02df31448e2ae655d25
