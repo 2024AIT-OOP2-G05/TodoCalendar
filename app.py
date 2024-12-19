@@ -1,15 +1,20 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import calendar
 from datetime import datetime
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
     # 現在の年と月を取得
-    now = datetime.now()
-    year = now.year
-    month = now.month
+    if request.method == 'POST':
+        year = int(request.form['year'])
+        month = int(request.form['month'])
+
+    else:
+        now = datetime.now()
+        year = now.year
+        month = now.month
 
     # カレンダーを作成
     cal = calendar.Calendar(firstweekday=6)
