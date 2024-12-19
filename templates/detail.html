@@ -9,8 +9,21 @@
 
 <body>
     <h1>{{ year }}年{{ month }}月{{ day }}日</h1>
-    <p>ここにタスクが追加されます。</p>
-    <a href="/">戻る</a>
+    {% if schedules %}
+    <ul>
+        {% for schedule in schedules %}
+        <li>
+            <strong>{{ schedule.title }}</strong><br>
+            開始日: {{ schedule.start_date }}<br>
+            終了日: {{ schedule.end_date }}<br>
+            詳細: {{ schedule.details }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>この日に該当するスケジュールはありません。</p>
+    {% endif %}
+    <a href="{{ url_for('index') }}">戻る</a>
 </body>
 
 </html>

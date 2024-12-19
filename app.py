@@ -35,9 +35,25 @@ def index():
 
 @app.route('/detail/<int:year>/<int:month>/<int:day>')
 def detail(year, month, day):
-    # ここでdayに紐づく詳細情報を取得して表示する処理を書く
-    # とりあえず、デモとして日付を表示するだけ
-    return render_template('detail.html', year=year, month=month, day=day)
+    # データベースからスケジュールを読み込む
+    with open(DB_FILE, 'r') as db:
+        schedules = json.load(db)
+
+    # 対象日をdatetimeオブジェクトに変換
+    target_date = datetime(year, month, day)
+
+    # 対象日のスケジュールをフィルタリング
+    filtered_schedules = []
+    for schedule in schedules:
+        start = datetime.strptime(schedule['start_date'], "%Y-%m-%d")
+        end = datetime.strptime(schedule['end_date'], "%Y-%m-%d")
+        # 開始日 <= 対象日 <= 終了日 であれば対象
+        if start <= target_date <= end:
+            filtered_schedules.append(schedule)
+
+    # detail.htmlをレンダリングする際にfiltered_schedulesを渡す
+    return render_template('detail.html', year=year, month=month, day=day, schedules=filtered_schedules)
+
 
 
 # スケジュール追加ページ ('/add_schedule')：スケジュールを追加するフォームを表示し、データを保存
@@ -83,7 +99,6 @@ def view_schedules():
     # スケジュール確認ページをレンダリングし、スケジュールリストを渡す
     return render_template('view_schedules.html', schedules=schedules)
 
-# アプリケーションのエントリーポイント
 if __name__ == '__main__':
     # デバッグモードで Flask アプリケーションを実行
-    app.run(debug=True)
+    app.run(debug=True, port=11454)
