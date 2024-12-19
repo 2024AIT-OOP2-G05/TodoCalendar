@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,31 +9,17 @@
             width: 100%;
             border-collapse: collapse;
         }
-
-        th,
-        td {
-            width: 14.28%;
-            /* 7列なので100%を7で割る */
+        th, td {
+            width: 14.28%; /* 7列なので100%を7で割る */
             border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
         }
-
         th {
             background-color: #f2f2f2;
         }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        a:hover {
-            background-color: #e0e0e0;
-        }
     </style>
 </head>
-
 <body>
     <h1>{{ year }}年{{ month }}月のカレンダー</h1>
     <table>
@@ -51,18 +36,17 @@
         </thead>
         <tbody>
             {% for week in month_days %}
-            <tr>
-                {% for day in week %}
-                {% if day == 0 %}
-                <td></td>
-                {% else %}
-                <td><a href="/detail/{{ year }}/{{ month }}/{{ day }}">{{ day }}</a></td>
-                {% endif %}
-                {% endfor %}
-            </tr>
+                <tr>
+                    {% for day in week %}
+                        {% if day == 0 %}
+                            <td></td>
+                        {% else %}
+                            <td>{{ day }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
             {% endfor %}
         </tbody>
     </table>
 </body>
-
 </html>
