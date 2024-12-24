@@ -5,6 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>完了したスケジュール</title>
+    <style>
+        /* 追加: 完了スケジュールリストのスタイルを調整 */
+        .completed-item {
+            display: flex;
+            /* ボタンを右端に配置するためにフレックスボックスを使用 */
+            justify-content: space-between;
+            /* コンテンツを左右に分ける */
+            align-items: center;
+            /* 垂直方向を中央揃え */
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            /* 下線を追加 */
+        }
+
+        .completed-item button {
+            margin-left: 16px;
+            /* ボタンとコンテンツの間にスペースを追加 */
+        }
+    </style>
 </head>
 
 <body>
@@ -14,12 +33,14 @@
     {% if completed_schedules %}
     <ul>
         {% for schedule in completed_schedules %}
-        <li>
-            <strong>{{ schedule.title }}</strong><br>
-            開始日: {{ schedule.start_date }}<br>
-            終了日: {{ schedule.end_date }}<br>
-            詳細: {{ schedule.details }}
-            <!-- 元に戻すボタン -->
+        <li class="completed-item">
+            <div>
+                <strong>{{ schedule.title }}</strong><br>
+                開始日: {{ schedule.start_date }}<br>
+                終了日: {{ schedule.end_date }}<br>
+                詳細: {{ schedule.details }}
+            </div>
+            <!-- 元に戻すボタンを右端に配置 -->
             <form method="post" style="display: inline;">
                 <input type="hidden" name="title" value="{{ schedule.title }}">
                 <button type="submit">元に戻す</button>
