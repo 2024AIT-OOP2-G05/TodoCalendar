@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ year }}年{{ month }}月{{ day }}日のスケジュール</title>
+    <style>
+        .completed {
+            text-decoration: line-through;
+            /* 取り消し線のスタイル */
+        }
+    </style>
+    <script>
+        // JavaScriptでチェックボックスのクリックイベントを処理
+        function toggleSchedule(title, isCompleted) {
+            const formData = new FormData();
+            formData.append("title", title);
+            formData.append("action", isCompleted ? "uncomplete" : "complete");
+
+            // 非同期リクエストでスケジュールの状態を変更
+            fetch(window.location.href, {
+                method: "POST",
+                body: formData
+            }).then(() => {
+                location.reload(); // 状態変更後にページをリロードして反映
+            });
+        }
+
+        // JavaScriptで削除ボタンのクリックイベントを処理
+        function deleteSchedule(title) {
+            const formData = new FormData();
+            formData.append("title", title);
+            formData.append("action", "delete");
+
+            // 非同期リクエストでスケジュールを削除
+            fetch(window.location.href, {
+                method: "POST",
+                body: formData
+            }).then(() => {
+                location.reload(); // 削除後にページをリロードして反映
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <h1>{{ year }}年{{ month }}月{{ day }}日のスケジュール</h1>
+
+    <!-- スケジュールセクション -->
+    <h2>スケジュール</h2>
+    <ul>
+        {% for schedule in schedules %}
+        <li>
+            <input type="checkbox" onclick="toggleSchedule('{{ schedule.title }}', false)" />
+            <strong>{{ schedule.title }}</strong><br>
+            開始日: {{ schedule.start_date }}<br>
+            終了日: {{ schedule.end_date }}<br>
+            詳細: {{ schedule.details }}
+            <!-- 削除ボタン -->
+            <button onclick="deleteSchedule('{{ schedule.title }}')">削除</button>
+        </li>
+        {% endfor %}
+        {% if not schedules %}
+        <p>予定を追加してください。</p>
+        {% endif %}
+    </ul>
+
+    <!-- 完了したスケジュールセクション -->
+    <h2>完了したスケジュール</h2>
+    <ul>
+        {% for schedule in completed_schedules %}
+        <li class="completed">
+            <input type="checkbox" checked onclick="toggleSchedule('{{ schedule.title }}', true)" />
+            <strong>{{ schedule.title }}</strong><br>
+            開始日: {{ schedule.start_date }}<br>
+            終了日: {{ schedule.end_date }}<br>
+            詳細: {{ schedule.details }}
+            <!-- 削除ボタン -->
+            <button onclick="deleteSchedule('{{ schedule.title }}')">削除</button>
+        </li>
+        {% endfor %}
+        {% if not completed_schedules %}
+        <p>予定を追加してください。</p>
+        {% endif %}
+    </ul>
+
+    <a href="{{ url_for('index') }}">カレンダーに戻る</a>
+</body>
+
+</html>

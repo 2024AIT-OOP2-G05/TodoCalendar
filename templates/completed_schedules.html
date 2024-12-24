@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>完了したスケジュール</title>
+</head>
+
+<body>
+    <h1>完了したスケジュール一覧</h1>
+
+    <!-- 完了したスケジュールを表示 -->
+    {% if completed_schedules %}
+    <ul>
+        {% for schedule in completed_schedules %}
+        <li>
+            <strong>{{ schedule.title }}</strong><br>
+            開始日: {{ schedule.start_date }}<br>
+            終了日: {{ schedule.end_date }}<br>
+            詳細: {{ schedule.details }}
+            <!-- 元に戻すボタン -->
+            <form method="post" style="display: inline;">
+                <input type="hidden" name="title" value="{{ schedule.title }}">
+                <button type="submit">元に戻す</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>完了したスケジュールはありません。</p>
+    {% endif %}
+
+    <a href="{{ url_for('index') }}">カレンダーに戻る</a>
+</body>
+
+</html>
