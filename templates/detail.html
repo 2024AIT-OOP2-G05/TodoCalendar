@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ year }}年{{ month }}月{{ day }}日のスケジュール</title>
+    <style>
+        .completed {
+            text-decoration: line-through;
+            /* 完了したスケジュールに取り消し線を適用 */
+        }
+
+        /* スケジュール項目のスタイル */
+        .schedule-item {
+            display: flex;
+            /* ボタンを右端に配置するためにフレックスボックスを使用 */
+            justify-content: space-between;
+            /* コンテンツを左右に分ける */
+            align-items: center;
+            /* 垂直方向を中央揃え */
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            /* 下線を追加 */
+        }
+
+        .schedule-item button {
+            margin-left: 16px;
+            /* ボタンとコンテンツの間にスペースを追加 */
+            text-decoration: none;
+            /* 削除ボタンには取り消し線を付けない */
+        }
+
+        /* 完了したスケジュールの内容部分のみ取り消し線を適用 */
+        .completed-content {
+            flex-grow: 1;
+            /* コンテンツ部分をフレックスボックスで広げる */
+        }
+    </style>
+    <script>
+        // JavaScriptでチェックボックスのクリックイベントを処理
+        function toggleSchedule(title, isCompleted) {
+            const formData = new FormData();
+            formData.append("title", title);
+            formData.append("action", isCompleted ? "uncomplete" : "complete");
+
+            // 非同期リクエストでスケジュールの状態を変更
+            fetch(window.location.href, {
+                method: "POST",
+                body: formData
+            }).then(() => {
+                location.reload(); // 状態変更後にページをリロードして反映
+            });
+        }
+
+        // JavaScriptで削除ボタンのクリックイベントを処理
+        function deleteSchedule(title) {
+            const formData = new FormData();
+            formData.append("title", title);
+            formData.append("action", "delete");
+
+            // 非同期リクエストでスケジュールを削除
+            fetch(window.location.href, {
+                method: "POST",
+                body: formData
+            }).then(() => {
+                location.reload(); // 削除後にページをリロードして反映
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <h1>{{ year }}年{{ month }}月{{ day }}日のスケジュール</h1>
+
+    <!-- スケジュールセクション -->
+    <h2>スケジュール</h2>
+    <ul>
+        {% for schedule in schedules %}
+        <li class="schedule-item">
+            <div>
+                <input type="checkbox" onclick="toggleSchedule('{{ schedule.title }}', false)" />
+                <strong>{{ schedule.title }}</strong><br>
+                開始日: {{ schedule.start_date }}<br>
+                終了日: {{ schedule.end_date }}<br>
+                詳細: {{ schedule.details }}
+            </div>
+            <!-- 削除ボタンを右端に配置 -->
+            <button onclick="deleteSchedule('{{ schedule.title }}')">削除</button>
+        </li>
+        {% endfor %}
+        {% if not schedules %}
+        <p>予定を追加してください。</p>
+        {% endif %}
+    </ul>
+
+    <!-- 完了したスケジュールセクション -->
+    <h2>完了したスケジュール</h2>
+    <ul>
+        {% for schedule in completed_schedules %}
+        <li class="schedule-item">
+            <!-- 完了したスケジュールの内容部分に取り消し線を適用 -->
+            <div class="completed-content completed">
+                <input type="checkbox" checked onclick="toggleSchedule('{{ schedule.title }}', true)" />
+                <strong>{{ schedule.title }}</strong><br>
+                開始日: {{ schedule.start_date }}<br>
+                終了日: {{ schedule.end_date }}<br>
+                詳細: {{ schedule.details }}
+            </div>
+            <!-- 削除ボタンは取り消し線なし -->
+            <button onclick="deleteSchedule('{{ schedule.title }}')">削除</button>
+        </li>
+        {% endfor %}
+        {% if not completed_schedules %}
+        <p>予定を追加してください。</p>
+        {% endif %}
+    </ul>
+
+    <a href="{{ url_for('index') }}">カレンダーに戻る</a>
+</body>
+
+</html>

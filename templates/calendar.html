@@ -23,11 +23,31 @@
         th {
             background-color: #f2f2f2;
         }
+
+        /* リンクのデフォルトスタイルを無効化 */
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 
 <body>
     <h1>{{ year }}年{{ month }}月のカレンダー</h1>
+
+    <!-- 年と月を選択するフォーム -->
+    <form method="post" action="/">
+        <label for="year">年:</label>
+        <input type="number" id="year" name="year" value="{{ year }}" min="1900" max="2100" required>
+        <label for="month">月:</label>
+        <input type="number" id="month" name="month" value="{{ month }}" min="1" max="12" required>
+        <button type="submit">表示</button>
+    </form>
+
     <table>
         <thead>
             <tr>
@@ -47,16 +67,23 @@
                 {% if day == 0 %}
                 <td></td>
                 {% else %}
-                <td>{{ day }}</td>
+                <!-- 日付をクリック可能にし、detailページへのリンクを追加 -->
+                <td>
+                    <a href="{{ url_for('detail', year=year, month=month, day=day) }}">{{ day }}</a>
+                </td>
                 {% endif %}
                 {% endfor %}
             </tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- スケジュール管理リンク -->
     <div class="add-schedule">
         <a href="{{ url_for('add_schedule') }}">スケジュールを追加</a>
         <a href="{{ url_for('view_schedules') }}">スケジュールを確認</a>
+        <!-- 変更点: "完了したスケジュール"リンクを追加 -->
+        <a href="{{ url_for('completed_schedules') }}">完了したスケジュール</a>
     </div>
 </body>
 
