@@ -3,120 +3,80 @@ import calendar
 from datetime import datetime
 import json
 import os
-import uuid
 
 app = Flask(__name__)
 
+# データベースファイルのパス
 DB_FILE = 'database.json'
 
+# データベースを初期化
 if not os.path.exists(DB_FILE):
     with open(DB_FILE, 'w') as db:
         json.dump([], db)
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    now = datetime.now()
-    year = now.year
-    month = now.month
+    # POSTリクエストで年と月を取得する処理を追加
+    # 変更点: 年と月を選択するフォームからのデータを取得しカレンダーを動的に更新
+    if request.method == 'POST':
+        year = int(request.form['year'])  # ユーザーが選択した年を取得
+        month = int(request.form['month'])  # ユーザーが選択した月を取得
+    else:
+        # 初回アクセス時またはGETリクエスト時には現在の年と月を表示
+        now = datetime.now()
+        year = now.year
+        month = now.month
 
-    cal = calendar.Calendar(firstweekday=6)
-    month_days = cal.monthdayscalendar(year, month)
+    # カレンダーを作成
+    cal = calendar.Calendar(firstweekday=6)  # 日曜日を週の開始日に設定
+    month_days = cal.monthdayscalendar(year, month)  # 月間のカレンダー構造を取得
 
+    # データベースからスケジュールを読み込む
     with open(DB_FILE, 'r') as db:
         schedules = json.load(db)
+
+    # 変更点: カレンダーの年・月とスケジュール情報をテンプレートに渡す
     return render_template('calendar.html', year=year, month=month, month_days=month_days, schedules=schedules)
-
-@app.route('/detail/<int:year>/<int:month>/<int:day>')
-def detail(year, month, day):
-    with open(DB_FILE, 'r') as db:
-        schedules = json.load(db)
-    target_date = datetime(year, month, day)
-
-    filtered_schedules = []
-    for schedule in schedules:
-        start = datetime.strptime(schedule['start_date'], "%Y-%m-%d")
-        end = datetime.strptime(schedule['end_date'], "%Y-%m-%d")
-        if start <= target_date <= end:
-            filtered_schedules.append(schedule)
-
-    # completedがFalseのものとTrueのものを分ける
-    incomplete_schedules = [s for s in filtered_schedules if not s.get('completed', False)]
-    completed_schedules = [s for s in filtered_schedules if s.get('completed', False)]
-
-    return render_template('detail.html', year=year, month=month, day=day,
-                           incomplete_schedules=incomplete_schedules,
-                           completed_schedules=completed_schedules)
 
 @app.route('/add_schedule', methods=['GET', 'POST'])
 def add_schedule():
     if request.method == 'POST':
+        # スケジュールデータをフォームから取得
         title = request.form['title']
         start_date = request.form['start_date']
         end_date = request.form['end_date']
         details = request.form['details']
 
+        # データベースから現在のスケジュールを読み込む
         with open(DB_FILE, 'r') as db:
             schedules = json.load(db)
 
+        # 新しいスケジュールをリストに追加
         schedules.append({
-            'id': uuid.uuid4().hex,  # 一意のIDを付与
             'title': title,
             'start_date': start_date,
             'end_date': end_date,
-            'details': details,
-            'completed': False
+            'details': details
         })
 
+        # 更新されたスケジュールをデータベースに保存
         with open(DB_FILE, 'w') as db:
             json.dump(schedules, db, indent=4, ensure_ascii=False)
 
+        # カレンダー表示にリダイレクト
         return redirect(url_for('index'))
 
     return render_template('add_schedule.html')
 
 @app.route('/view_schedules')
 def view_schedules():
+    # スケジュールを読み込む
     with open(DB_FILE, 'r') as db:
         schedules = json.load(db)
+
+    # スケジュール確認ページを表示
     return render_template('view_schedules.html', schedules=schedules)
 
-@app.route('/complete_schedule', methods=['POST'])
-def complete_schedule():
-    sched_id = request.form.get('id')
-    year = request.form.get('year')
-    month = request.form.get('month')
-    day = request.form.get('day')
-
-    with open(DB_FILE, 'r') as db:
-        schedules = json.load(db)
-
-    for s in schedules:
-        if s['id'] == sched_id:
-            s['completed'] = True
-            break
-
-    with open(DB_FILE, 'w') as db:
-        json.dump(schedules, db, indent=4, ensure_ascii=False)
-
-    return redirect(url_for('detail', year=year, month=month, day=day))
-
-@app.route('/delete_schedule', methods=['POST'])
-def delete_schedule():
-    sched_id = request.form.get('id')
-    year = request.form.get('year')
-    month = request.form.get('month')
-    day = request.form.get('day')
-
-    with open(DB_FILE, 'r') as db:
-        schedules = json.load(db)
-
-    schedules = [s for s in schedules if s['id'] != sched_id]
-
-    with open(DB_FILE, 'w') as db:
-        json.dump(schedules, db, indent=4, ensure_ascii=False)
-
-    return redirect(url_for('detail', year=year, month=month, day=day))
-
 if __name__ == '__main__':
-
-    app.run(debug=True, port=11111)
+    # デバッグモードでFlaskアプリケーションを実行
+    app.run(debug=True)
