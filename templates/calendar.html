@@ -23,6 +23,16 @@
         th {
             background-color: #f2f2f2;
         }
+
+        /* リンクのデフォルトスタイルを無効化 */
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 
@@ -57,16 +67,23 @@
                 {% if day == 0 %}
                 <td></td>
                 {% else %}
-                <td>{{ day }}</td>
+                <!-- 日付をクリック可能にし、detailページへのリンクを追加 -->
+                <td>
+                    <a href="{{ url_for('detail', year=year, month=month, day=day) }}">{{ day }}</a>
+                </td>
                 {% endif %}
                 {% endfor %}
             </tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- スケジュール管理リンク -->
     <div class="add-schedule">
         <a href="{{ url_for('add_schedule') }}">スケジュールを追加</a>
         <a href="{{ url_for('view_schedules') }}">スケジュールを確認</a>
+        <!-- 変更点: "完了したスケジュール"リンクを追加 -->
+        <a href="{{ url_for('completed_schedules') }}">完了したスケジュール</a>
     </div>
 </body>
 
