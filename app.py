@@ -4,6 +4,7 @@ from datetime import datetime
 import json
 import os
 
+# Flask アプリケーションの初期化
 app = Flask(__name__)
 
 # データベースファイルのパス
@@ -37,17 +38,18 @@ def index():
     cal = calendar.Calendar(firstweekday=6)  # 日曜日を週の開始日に設定
     month_days = cal.monthdayscalendar(year, month)  # 月間のカレンダー構造を取得
 
-    # データベースからスケジュールを読み込む
+    # データベースからスケジュールを読み込み
     with open(DB_FILE, 'r') as db:
         schedules = json.load(db)
 
-    # カレンダーの年・月とスケジュール情報をテンプレートに渡す
+    # カレンダーの HTML テンプレートをレンダリングし、値を渡す
     return render_template('calendar.html', year=year, month=month, month_days=month_days, schedules=schedules)
 
+# スケジュール追加ページ ('/add_schedule')：スケジュールを追加するフォームを表示し、データを保存
 @app.route('/add_schedule', methods=['GET', 'POST'])
 def add_schedule():
-    if request.method == 'POST':
-        # スケジュールデータをフォームから取得
+    if request.method == 'POST':  # POST メソッドでデータが送信された場合
+        # フォームからスケジュールデータを取得
         title = request.form['title']
         start_date = request.form['start_date']
         end_date = request.form['end_date']
@@ -64,15 +66,40 @@ def add_schedule():
             'end_date': end_date,
             'details': details
         })
-
-        # 更新されたスケジュールをデータベースに保存
+        
+        # 更新されたスケジュールリストをデータベースに保存
         with open(DB_FILE, 'w') as db:
             json.dump(schedules, db, indent=4, ensure_ascii=False)
 
-        # カレンダー表示にリダイレクト
+        # カレンダーページにリダイレクト
         return redirect(url_for('index'))
 
+    # GET メソッドの場合、スケジュール追加ページを表示
     return render_template('add_schedule.html')
+
+# スケジュール編集ページ ('/edit_schedules/<int:index>')：スケジュールを編集
+@app.route('/edit_schedule/<int:index>', methods=['GET', 'POST'])
+def edit_schedule(index):
+    # データベースからスケジュールを取得
+    with open(DB_FILE, 'r') as db:
+        schedules = json.load(db)
+
+    if request.method == 'POST':  # POST メソッドでデータが送信された場合
+        # フォームから編集内容を取得
+        schedules[index]['title'] = request.form['title']
+        schedules[index]['start_date'] = request.form['start_date']
+        schedules[index]['end_date'] = request.form['end_date']
+        schedules[index]['details'] = request.form['details']
+
+        # 更新されたスケジュールを保存
+        with open(DB_FILE, 'w') as db:
+            json.dump(schedules, db, indent=4, ensure_ascii=False)
+
+        # スケジュール確認ページにリダイレクト
+        return redirect(url_for('view_schedules'))
+
+    # GET メソッドの場合、編集ページを表示
+    return render_template('edit_schedule.html', schedule=schedules[index], index=index)
 
 @app.route('/view_schedules')
 def view_schedules():

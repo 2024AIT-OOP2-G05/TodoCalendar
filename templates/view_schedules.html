@@ -15,7 +15,9 @@
             <strong>{{ schedule.title }}</strong><br>
             開始日: {{ schedule.start_date }}<br>
             終了日: {{ schedule.end_date }}<br>
-            詳細: {{ schedule.details }}
+            詳細: {{ schedule.details }}<br>
+            <!-- 編集ボタン -->
+            <a href="{{ url_for('edit_schedule', index=loop.index0) }}">編集</a>
         </li>
         {% endfor %}
     </ul>
