@@ -16,12 +16,18 @@ if not os.path.exists(DB_FILE):
         json.dump([], db)
 
 # ルートエンドポイント ('/')：カレンダーを表示
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
     # 現在の年と月を取得
-    now = datetime.now()
-    year = now.year
-    month = now.month
+    if request.method == 'POST':
+        year = int(request.form['year'])
+        month = int(request.form['month'])
+
+    else:
+        now = datetime.now()
+        year = now.year
+        month = now.month
+
     # カレンダーを作成
     cal = calendar.Calendar(firstweekday=6)  # 日曜日を週の開始日に設定
     month_days = cal.monthdayscalendar(year, month)  # 月間のカレンダー構造を取得
