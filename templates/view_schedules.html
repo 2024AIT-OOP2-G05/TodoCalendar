@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スケジュール一覧</title>
+</head>
+
+<body>
+    <h1>スケジュール一覧</h1>
+    {% if schedules %}
+    <ul>
+        {% for schedule in schedules %}
+        <li>
+            <strong>{{ schedule.title }}</strong><br>
+            開始日: {{ schedule.start_date }}<br>
+            終了日: {{ schedule.end_date }}<br>
+            詳細: {{ schedule.details }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>登録されたスケジュールはありません。</p>
+    {% endif %}
+    <a href="{{ url_for('index') }}">戻る</a>
+</body>
+
+</html>
