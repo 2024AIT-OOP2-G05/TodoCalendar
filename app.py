@@ -20,6 +20,7 @@ if not os.path.exists(COMPLETED_FILE):
     with open(COMPLETED_FILE, 'w') as completed:
         json.dump([], completed)
 
+# ルートエンドポイント ('/')：カレンダーを表示
 @app.route('/', methods=['GET', 'POST'])
 def index():
     # POSTリクエストで年と月を取得する処理を追加
