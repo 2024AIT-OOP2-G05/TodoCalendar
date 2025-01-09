@@ -6,22 +6,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>完了したスケジュール</title>
     <style>
-        /* 追加: 完了スケジュールリストのスタイルを調整 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
         .completed-item {
             display: flex;
-            /* ボタンを右端に配置するためにフレックスボックスを使用 */
             justify-content: space-between;
-            /* コンテンツを左右に分ける */
             align-items: center;
-            /* 垂直方向を中央揃え */
             padding: 8px;
             border-bottom: 1px solid #ddd;
-            /* 下線を追加 */
+            background-color: #fff;
+            margin-bottom: 10px;
+            border-radius: 4px;
         }
 
         .completed-item button {
             margin-left: 16px;
-            /* ボタンとコンテンツの間にスペースを追加 */
+            text-decoration: none;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .completed-item button:hover {
+            background-color: #0056b3;
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .actions a {
+            display: inline-block;
+            margin: 10px 20px;
+            padding: 15px 30px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .actions a:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -52,7 +92,9 @@
     <p>完了したスケジュールはありません。</p>
     {% endif %}
 
-    <a href="{{ url_for('index') }}">カレンダーに戻る</a>
+    <div class="actions">
+        <a href="{{ url_for('index') }}">カレンダーに戻る</a>
+    </div>
 </body>
 
 </html>
