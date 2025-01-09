@@ -24,15 +24,20 @@ if not os.path.exists(COMPLETED_FILE):
 # ルートエンドポイント ('/')：カレンダーを表示
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    # 現在の日時を取得
+    now = datetime.now()
+
     # POSTリクエストで年と月を取得する処理を追加
     if request.method == 'POST':
         year = int(request.form['year'])  # ユーザーが選択した年を取得
         month = int(request.form['month'])  # ユーザーが選択した月を取得
     else:
         # 初回アクセス時またはGETリクエスト時には現在の年と月を表示
-        now = datetime.now()
         year = now.year
         month = now.month
+
+    # 現在の日付を取得（現在の年と月が表示されている場合のみ）
+    current_day = now.day if now.month == month and now.year == year else None
 
     # カレンダーを作成
     cal = calendar.Calendar(firstweekday=6)  # 日曜日を週の開始日に設定
@@ -43,7 +48,7 @@ def index():
         schedules = json.load(db)
 
     # カレンダーの HTML テンプレートをレンダリングし、値を渡す
-    return render_template('calendar.html', year=year, month=month, month_days=month_days, schedules=schedules)
+    return render_template('calendar.html', year=year, month=month, month_days=month_days, schedules=schedules, current_day=current_day)
 
 # スケジュール追加ページ ('/add_schedule')：スケジュールを追加するフォームを表示し、データを保存
 @app.route('/add_schedule', methods=['GET', 'POST'])
