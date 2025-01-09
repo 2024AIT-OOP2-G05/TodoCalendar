@@ -8,30 +8,6 @@ import xml.etree.ElementTree as ET
 # Flask アプリケーションの初期化
 app = Flask(__name__)
 
-jma_url = "https://www.data.jma.go.jp/developer/xml/feed/extra.xml"
-response = requests.get(jma_url)
-response.raise_for_status()
-root = ET.fromstring(response.content)
-target_location = "愛知県"
-for item in root.findall(".//entry"):
-            title = item.find("title").text
-            if target_location in title:
-                # 天気情報のURLを取得
-                weather_url = item.find("link").attrib["href"]
-                
-                # 詳細な天気データを取得
-                weather_response = requests.get(weather_url)
-                weather_response.raise_for_status()
-                weather_root = ET.fromstring(weather_response.content)
-
-                # 天気情報の要約を取得
-                for area in weather_root.findall(".//MeteorologicalInfos//MeteorologicalInfo"):
-                    # 地域情報を取得（豊田市を含むエリアか確認）
-                    area_name = area.find(".//Name").text
-                    if "豊田市" in area_name:
-                        weather = area.find(".//Text").text
-                          
-
 
 # データベースファイルのパス
 DB_FILE = 'database.json'
@@ -67,6 +43,33 @@ def index():
     # データベースからスケジュールを読み込み
     with open(DB_FILE, 'r') as db:
         schedules = json.load(db)
+    
+
+    # 天気情報の取得
+    jma_url = "https://www.data.jma.go.jp/developer/xml/feed/extra.xml"
+    response = requests.get(jma_url)
+    response.raise_for_status()
+    root = ET.fromstring(response.content)
+    target_location = "愛知県"
+    for item in root.findall(".//entry"):
+        title = item.find("title").text
+        if target_location in title:
+            # 天気情報のURLを取得
+            weather_url = item.find("link").attrib["href"]
+                
+            # 詳細な天気データを取得
+            weather_response = requests.get(weather_url)
+            weather_response.raise_for_status()
+            weather_root = ET.fromstring(weather_response.content)
+
+            # 天気情報の要約を取得
+            for area in weather_root.findall(".//MeteorologicalInfos//MeteorologicalInfo"):
+                # 地域情報を取得（豊田市を含むエリアか確認）
+                area_name = area.find(".//Name").text
+                if "豊田市" in area_name:
+                    weather = area.find(".//Text").text
+                          
+
 
     # カレンダーの HTML テンプレートをレンダリングし、値を渡す
     return render_template('calendar.html', year=year, month=month, month_days=month_days, schedules=schedules, weather = weather)
