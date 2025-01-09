@@ -68,7 +68,6 @@ def index():
                 area_name = area.find(".//Name").text
                 if "豊田市" in area_name:
                     weather = area.find(".//Text").text
-                          
 
 
     # カレンダーの HTML テンプレートをレンダリングし、値を渡す
@@ -245,4 +244,29 @@ def completed_schedules():
 
 if __name__ == '__main__':
     # デバッグモードでFlaskアプリケーションを実行
-    app.run(debug=True,port=26000)
+    #app.run(debug=True,port=26000)
+    # 天気情報の取得
+    jma_url = "https://www.data.jma.go.jp/developer/xml/feed/extra.xml"
+    response = requests.get(jma_url)
+    response.raise_for_status()
+    root = ET.fromstring(response.content)
+    target_location = "愛知県"
+    for item in root.findall(".//entry"):
+        title = item.find("title").text
+        if target_location in title:
+            # 天気情報のURLを取得
+            weather_url = item.find("link").attrib["href"]
+                
+            # 詳細な天気データを取得
+            weather_response = requests.get(weather_url)
+            weather_response.raise_for_status()
+            weather_root = ET.fromstring(weather_response.content)
+
+            # 天気情報の要約を取得
+            for area in weather_root.findall(".//MeteorologicalInfos//MeteorologicalInfo"):
+                # 地域情報を取得（豊田市を含むエリアか確認）
+                area_name = area.find(".//Name").text
+                if "豊田市" in area_name:
+                    weather = area.find(".//Text").text
+                    print(f"場所: 豊田市")
+                    print(f"天気情報: {weather}")
