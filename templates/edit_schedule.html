@@ -3,26 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>タスク編集</title>
+    <title>スケジュール編集</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>タスク編集</h1>
+    <h1>スケジュール編集</h1>
     <form method="POST">
         <label for="title">タイトル:</label>
-        <input type="text" id="title" name="title" value="{{ schedule['title'] }}" required><br><br>
+        <input type="text" id="title" name="title" value="{{ schedule.title }}" required>
 
         <label for="start_date">開始日:</label>
-        <input type="date" id="start_date" name="start_date" value="{{ schedule['start_date'] }}" required><br><br>
+        <input type="date" id="start_date" name="start_date" value="{{ schedule.start_date }}" required>
 
         <label for="end_date">終了日:</label>
-        <input type="date" id="end_date" name="end_date" value="{{ schedule['end_date'] }}" required><br><br>
+        <input type="date" id="end_date" name="end_date" value="{{ schedule.end_date }}" required>
 
-        <label for="details">詳細:</label><br>
-        <textarea id="details" name="details" rows="5" cols="40" required>{{ schedule['details'] }}</textarea><br><br>
+        <label for="details">詳細:</label>
+        <textarea id="details" name="details" rows="4" required>{{ schedule.details }}</textarea>
 
         <button type="submit">保存</button>
     </form>
-
-    <a href="{{ url_for('view_schedules') }}">キャンセル</a>
+    <a href="{{ url_for('view_schedules') }}">戻る</a>
 </body>
 </html>
