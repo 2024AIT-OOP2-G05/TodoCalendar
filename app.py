@@ -68,7 +68,7 @@ def index():
                 area_name = area.find(".//Name").text
                 if "豊田市" in area_name:
                     weather = area.find(".//Text").text
-
+                    break
 
     # カレンダーの HTML テンプレートをレンダリングし、値を渡す
     return render_template('calendar.html', year=year, month=month, month_days=month_days, schedules=schedules, weather=weather)
