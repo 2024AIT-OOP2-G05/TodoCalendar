@@ -33,6 +33,16 @@
         a:hover {
             text-decoration: underline;
         }
+
+        /* 日曜日を赤色に */
+        .sunday {
+            color: red;
+        }
+
+        /* 土曜日を青色に */
+        .saturday {
+            color: blue;
+        }
     </style>
 </head>
 
@@ -65,8 +75,8 @@
                 {% if day == 0 %}
                 <td></td>
                 {% else %}
-                <!-- 日付をクリック可能にし、detailページへのリンクを追加 -->
-                <td>
+                <!-- クラスを列インデックスに応じて設定 -->
+                <td class="{% if loop.index0 == 0 %}sunday{% elif loop.index0 == 6 %}saturday{% endif %}">
                     <a href="{{ url_for('detail', year=year, month=month, day=day) }}">{{ day }}</a>
                 </td>
                 {% endif %}
