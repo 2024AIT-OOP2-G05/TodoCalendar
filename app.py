@@ -3,9 +3,16 @@ import calendar
 from datetime import datetime
 import json
 import os
+import requests
 
 # Flask アプリケーションの初期化
 app = Flask(__name__)
+
+# 気象庁データの取得
+jma_url = "https://www.jma.go.jp/bosai/forecast/data/forecast/{エリアコード}.json"
+jma_json = requests.get(jma_url).json()
+weather = jma_json[0]["timeSeries"][0]["areas"][0]["weathers"][0]
+weather = weather.replace('　', '')
 
 # データベースファイルのパス
 DB_FILE = 'database.json'
@@ -43,7 +50,7 @@ def index():
         schedules = json.load(db)
 
     # カレンダーの HTML テンプレートをレンダリングし、値を渡す
-    return render_template('calendar.html', year=year, month=month, month_days=month_days, schedules=schedules)
+    return render_template('calendar.html', year=year, month=month, month_days=month_days, schedules=schedules, weather = weather)
 
 # スケジュール追加ページ ('/add_schedule')：スケジュールを追加するフォームを表示し、データを保存
 @app.route('/add_schedule', methods=['GET', 'POST'])
