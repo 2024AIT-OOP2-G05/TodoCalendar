@@ -34,6 +34,9 @@ def index():
         year = now.year
         month = now.month
 
+    # 現在の日付を取得
+    current_day = now.day if now.month == month and now.year == year else None
+
     # カレンダーを作成
     cal = calendar.Calendar(firstweekday=6)  # 日曜日を週の開始日に設定
     month_days = cal.monthdayscalendar(year, month)  # 月間のカレンダー構造を取得
@@ -43,7 +46,7 @@ def index():
         schedules = json.load(db)
 
     # カレンダーの HTML テンプレートをレンダリングし、値を渡す
-    return render_template('calendar.html', year=year, month=month, month_days=month_days, schedules=schedules)
+    return render_template('calendar.html', year=year, month=month, month_days=month_days, schedules=schedules, current_day=current_day)
 
 # スケジュール追加ページ ('/add_schedule')：スケジュールを追加するフォームを表示し、データを保存
 @app.route('/add_schedule', methods=['GET', 'POST'])
