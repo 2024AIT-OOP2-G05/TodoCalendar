@@ -35,12 +35,10 @@
         {% for schedule in completed_schedules %}
         <li class="completed-item">
             <div>
-                
                 <strong>{{ schedule.title }}</strong><br>
                 開始日: {{ schedule.start_date }}<br>
                 終了日: {{ schedule.end_date }}<br>
                 詳細: {{ schedule.details }}
-
             </div>
             <!-- 元に戻すボタンを右端に配置 -->
             <form method="post" style="display: inline;">
