@@ -54,7 +54,6 @@
         table {
             width: 100%;
             height: 70vh;
-            /* 高さを画面いっぱいに近づける */
             max-width: 1200px;
             margin: 0 auto;
             border-collapse: collapse;
@@ -89,6 +88,16 @@
 
         td {
             background-color: #fff;
+        }
+
+        /* 日曜日のスタイル */
+        td.sunday a {
+            color: red;
+        }
+
+        /* 土曜日のスタイル */
+        td.saturday a {
+            color: blue;
         }
 
         td a {
@@ -152,10 +161,11 @@
             <tr>
                 {% for day in week %}
                 {% if day == 0 %}
+                <!-- 空白の日付 -->
                 <td></td>
                 {% else %}
-                <!-- 日付をクリック可能にし、detailページへのリンクを追加 -->
-                <td>
+                <!-- 日付をクリック可能にし、日曜日と土曜日に特定のクラスを付与 -->
+                <td class="{% if loop.index == 1 %}sunday{% elif loop.index == 7 %}saturday{% endif %}">
                     <a href="{{ url_for('detail', year=year, month=month, day=day) }}">{{ day }}</a>
                 </td>
                 {% endif %}
