@@ -71,7 +71,7 @@ def index():
 
 
     # カレンダーの HTML テンプレートをレンダリングし、値を渡す
-    return render_template('calendar.html', year=year, month=month, month_days=month_days, schedules=schedules)
+    return render_template('calendar.html', year=year, month=month, month_days=month_days, schedules=schedules, weather=weather)
 
 # スケジュール追加ページ ('/add_schedule')：スケジュールを追加するフォームを表示し、データを保存
 @app.route('/add_schedule', methods=['GET', 'POST'])
