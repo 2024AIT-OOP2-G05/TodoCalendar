@@ -9,10 +9,12 @@ import requests
 app = Flask(__name__)
 
 # 気象庁データの取得
-jma_url = "https://www.jma.go.jp/bosai/forecast/data/forecast/230010.json"
-jma_json = requests.get(jma_url).json()
-weather = jma_json[0]["timeSeries"][0]["areas"][0]["weathers"][0]
-weather = weather.replace('　', '')
+url = "https://www.jma.go.jp/bosai/forecast/data/forecast/230010.json"
+data = requests.get(url).json()
+weather = data["weathers"][0]
+weather = weather.replace(' ','')
+
+
 
 # データベースファイルのパス
 DB_FILE = 'database.json'
