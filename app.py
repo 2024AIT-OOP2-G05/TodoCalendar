@@ -221,5 +221,4 @@ def completed_schedules():
 
 if __name__ == '__main__':
     # デバッグモードでFlaskアプリケーションを実行
-    app.run(debug=True,port=26000)
-
+    app.run(debug=True,port=27000)
