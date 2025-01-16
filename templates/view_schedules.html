@@ -1,9 +1,78 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>スケジュール一覧</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        ul {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0;
+            list-style: none;
+        }
+
+        li {
+            background: #fff;
+            margin-bottom: 15px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        li strong {
+            font-size: 18px;
+            color: #333;
+        }
+
+        li a {
+            display: inline-block;
+            margin-top: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        li a:hover {
+            text-decoration: underline;
+        }
+
+        p {
+            text-align: center;
+            color: #555;
+            font-size: 16px;
+        }
+
+        .back-link {
+            display: block;
+            max-width: 800px;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .back-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 
 <body>
@@ -16,7 +85,6 @@
             開始日: {{ schedule.start_date }}<br>
             終了日: {{ schedule.end_date }}<br>
             詳細: {{ schedule.details }}<br>
-            <!-- 編集ボタン -->
             <a href="{{ url_for('edit_schedule', index=loop.index0) }}">編集</a>
         </li>
         {% endfor %}
@@ -24,6 +92,9 @@
     {% else %}
     <p>登録されたスケジュールはありません。</p>
     {% endif %}
-    <a href="{{ url_for('index') }}">戻る</a>
+    <div class="back-link">
+        <a href="{{ url_for('index') }}">戻る</a>
+    </div>
 </body>
+
 </html>
