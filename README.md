@@ -3,6 +3,8 @@
 
 ## 前提条件
 
+python             3.12.5
+
 Flask              3.1.0
 
 requests           2.32.3
