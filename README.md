@@ -4,11 +4,13 @@
 ## 前提条件
 
 Flask              3.1.0
+
 requests           2.32.3
 
 ## 実行方法
 
 ターミナルのTodoCalendarのディレクトリにて
+
 $TodoCalendar : python -u "app.py"
 
 ## 必要な機能
