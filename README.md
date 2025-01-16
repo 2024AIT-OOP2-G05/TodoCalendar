@@ -21,8 +21,6 @@ $TodoCalendar : python -u "app.py"
 
 河合くん
 
-梶田くん
-
 廣見くん
 
 櫻井くん
@@ -41,6 +39,7 @@ $TodoCalendar : python -u "app.py"
 
 ### デモ動画作り  
 
+梶田くん
 
 
 ### 日をまたいだスケジュールがカレンダーページから見れるようにする。
