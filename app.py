@@ -49,6 +49,12 @@ def index():
     with open(DB_FILE, 'r') as db:
         schedules = json.load(db)
     
+    # 直近のスケジュール3件を取得
+    upcoming_schedules = sorted(
+        [schedule for schedule in schedules if schedule['start_date'] >= now.strftime("%Y-%m-%d")],
+        key=lambda x: x['start_date']
+    )[:3]  # 未来の日付で最も近い3件を抽出
+    
     # 気象庁データの取得
     jma_url = "https://www.jma.go.jp/bosai/forecast/data/forecast/230000.json"
     jma_json = requests.get(jma_url).json()
@@ -57,7 +63,7 @@ def index():
 
 
     # カレンダーの HTML テンプレートをレンダリングし、値を渡す
-    return render_template('calendar.html', year=year, month=month, month_days=month_days, schedules=schedules, current_day=current_day, weather=jma_weather)
+    return render_template('calendar.html', year=year, month=month, month_days=month_days, schedules=schedules, current_day=current_day, weather=jma_weather, upcoming_schedules=upcoming_schedules)
 
 # スケジュール追加ページ ('/add_schedule')：スケジュールを追加するフォームを表示し、データを保存
 @app.route('/add_schedule', methods=['GET', 'POST'])
