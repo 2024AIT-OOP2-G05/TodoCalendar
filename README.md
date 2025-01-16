@@ -23,7 +23,7 @@ $TodoCalendar : python -u "app.py"
 
 廣見くん
 
-櫻井くん
+
 
 ### プレゼン資料作り
 
@@ -48,4 +48,4 @@ $TodoCalendar : python -u "app.py"
 
 ### 愛工大の今日の天気のデザイン
 
-
+櫻井くん
