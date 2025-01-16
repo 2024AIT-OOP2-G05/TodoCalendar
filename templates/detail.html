@@ -6,6 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ year }}年{{ month }}月{{ day }}日のスケジュール</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+
         .completed {
             text-decoration: line-through;
             /* 完了したスケジュールに取り消し線を適用 */
@@ -22,6 +34,9 @@
             padding: 8px;
             border-bottom: 1px solid #ddd;
             /* 下線を追加 */
+            background-color: #fff;
+            margin-bottom: 10px;
+            border-radius: 4px;
         }
 
         .schedule-item button {
@@ -29,12 +44,42 @@
             /* ボタンとコンテンツの間にスペースを追加 */
             text-decoration: none;
             /* 削除ボタンには取り消し線を付けない */
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .schedule-item button:hover {
+            background-color: #ff1a1a;
         }
 
         /* 完了したスケジュールの内容部分のみ取り消し線を適用 */
         .completed-content {
             flex-grow: 1;
             /* コンテンツ部分をフレックスボックスで広げる */
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .actions a {
+            display: inline-block;
+            margin: 10px 20px;
+            padding: 15px 30px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .actions a:hover {
+            background-color: #0056b3;
         }
     </style>
     <script>
@@ -116,7 +161,10 @@
         {% endif %}
     </ul>
 
-    <a href="{{ url_for('index') }}">カレンダーに戻る</a>
+    <div class="actions">
+        <a href="{{ url_for('index') }}">カレンダーに戻る</a>
+        <a href="{{ url_for('add_schedule') }}">スケジュールを追加</a>
+    </div>
 </body>
 
 </html>
