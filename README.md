@@ -1,5 +1,6 @@
-# TodoCalendar
+# TodoCalendar-AITedition-
 タスク管理のできるカレンダーwebアプリケーション
+背景は愛工大の正門で愛工大使用になっています
 
 ## 前提条件
 
