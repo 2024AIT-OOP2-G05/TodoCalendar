@@ -60,8 +60,21 @@ def index():
     jma_json = requests.get(jma_url).json()
     jma_weather = jma_json[0]["timeSeries"][0]["areas"][0]["weathers"][0]
     jma_weather = jma_weather.replace('　', '')
-
-
+    
+    # 天気と絵文字の対応表
+    weather_emoji_map = {
+        "晴れ": "☀️",
+        "曇り": "☁️",
+        "雨": "🌧️",
+        "雪": "❄️",
+        "雷": "⚡",
+        "霧": "🌫️"
+    }
+    # 天気に絵文字を追加
+    for key, emoji in weather_emoji_map.items():
+        if key in jma_weather:
+            jma_weather = f"{emoji} {jma_weather}"
+            break
     # カレンダーの HTML テンプレートをレンダリングし、値を渡す
     return render_template('calendar.html', year=year, month=month, month_days=month_days, schedules=schedules, current_day=current_day, weather=jma_weather, upcoming_schedules=upcoming_schedules)
 
