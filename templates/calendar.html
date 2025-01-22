@@ -141,6 +141,23 @@
 
 <body>
     <h1>{{ year }}年{{ month }}月のカレンダー</h1>
+    <!-- 直近の予定を表示 -->
+    <div style="margin-bottom: 20px; text-align: center;">
+        <h2>直近の予定</h2>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+            {% for schedule in upcoming_schedules %}
+            <li style="margin: 10px 0; font-size: 18px;">
+                <strong>{{ schedule.title }}</strong><br>
+                <span>{{ schedule.start_date }} ～ {{ schedule.end_date }}</span><br>
+                <span>{{ schedule.details }}</span>
+            </li>
+            {% else %}
+            <li style="margin: 10px 0; font-size: 18px; color: gray;">
+                直近の予定はありません。
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
     <p>今日の天気: {{ weather }}</p>
     <!-- 年と月を選択するフォーム -->
     <form method="post" action="/">
