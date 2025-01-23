@@ -10,9 +10,8 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-             background: url('/static/background.jpg') no-repeat center center fixed;
+            background: url('/static/background.jpg') no-repeat center center fixed;
             background-size: cover; /* 画面全体に背景画像を拡大 */
-            
         }
 
         h1 {
@@ -69,6 +68,7 @@
         th,
         td {
             width: 14.28%;
+            height: 80px;
             border: 1px solid #ddd;
             padding: 20px;
             text-align: center;
@@ -90,6 +90,7 @@
         }
         /*日付の背景 */
         td {
+            position: relative;
             background-color: rgba(255, 255, 255, 0.8); /* 背景色を白にして透明度80% */
             border: 1px solid #ddd;
             padding: 20px;
@@ -144,6 +145,25 @@
         .today {
             background-color: rgba(255, 223, 186, 0.5);
         }
+
+        .schedule-bar {
+            position: absolute;
+            margin-top: 5px;
+            bottom: 10px;
+            
+            width: 13px;
+            height: 13px;
+            background-color: #4285f4;
+            color: white;
+            text-align: center;
+            line-height: 20px;
+            font-size: 12px;
+            overflow: hidden;
+            border-radius: 10px;
+            z-index: 1;
+        }
+
+
     </style>
 </head>
 
@@ -196,9 +216,10 @@
                 <td></td>
                 {% else %}
                 <!-- 日付をクリック可能にし、日曜日と土曜日に特定のクラスを付与 -->
-                <td
+                <td id="{{ year }}-{{ '{:02d}'.format(month) }}-{{ '{:02d}'.format(day) }}"
                     class="{% if loop.index0 == 0 %}sunday{% elif loop.index0 == 6 %}saturday{% endif %} {% if day == current_day %}today{% endif %}">
                     <a href="{{ url_for('detail', year=year, month=month, day=day) }}">{{ day }}</a>
+
                 </td>
                 {% endif %}
                 {% endfor %}
@@ -214,5 +235,53 @@
         <a href="{{ url_for('completed_schedules') }}">完了したスケジュール</a>
     </div>
 </body>
+
+<script>
+    const schedules = JSON.parse('{{ schedules | tojson | safe }}');
+
+   // スケジュールを描画する関数
+function renderSchedules() {
+    let schedulePositions = {};
+    schedules.forEach(schedule => {
+        const startDate = new Date(schedule.start_date);
+        const endDate = new Date(schedule.end_date);
+
+        // スケジュールの開始日から終了日までの日数を計算
+        let currentDate = new Date(startDate);
+
+        // 開始日から終了日までの日ごとにループ
+        while (currentDate <= endDate) {
+            // 対応する <td> 要素を取得
+            const startyear = currentDate.getFullYear();
+            const startmonth = String(currentDate.getMonth() + 1).padStart(2, '0');  // 月をゼロ埋め
+            const startday = String(currentDate.getDate()).padStart(2, '0');  // 日をゼロ埋め
+            
+            const dayId = `${startyear}-${startmonth}-${startday}`;
+            const dayElement = document.getElementById(dayId);
+
+            if(!schedulePositions[dayId]){
+                schedulePositions[dayId] = 0;
+            }
+            if (dayElement) {
+                const scheduleBar = document.createElement('div');
+                scheduleBar.classList.add('schedule-bar');
+                scheduleBar.style.left = `${schedulePositions[dayId] * 20 + 10}px`;
+                if (currentDate.getTime() === startDate.getTime()){
+                    scheduleBar.setAttribute("id", "startDate");
+                }else if(currentDate.getTime() === endDate.getTime()){
+                    scheduleBar.setAttribute("id", "endDate");
+                }
+                // td 内に横棒を追加
+                dayElement.appendChild(scheduleBar);
+                schedulePositions[dayId]++;
+            }
+            // 次の日に進む
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+    });
+}
+
+    window.onload = renderSchedules();
+</script>
 
 </html>
